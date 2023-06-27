@@ -6,6 +6,7 @@ import BlankLayout from "@layouts/BlankLayout"
 import VerticalLayout from "@src/layouts/VerticalLayout"
 import HorizontalLayout from "@src/layouts/HorizontalLayout"
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper"
+import RequireAuth from '@src/components/RequireAuth'
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute"

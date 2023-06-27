@@ -1,12 +1,17 @@
 // ** React Imports
-import { useSkin } from "@hooks/useSkin";
-import { Link } from "react-router-dom";
+import { useSkin } from "@hooks/useSkin"
+import { useRef, useState, useEffect } from "react"
+import useAuth from "../hooks/useAuth"
+import { Link, useNavigate, useLocation } from "react-router-dom"
+
+import axios from "../api/axios"
+const LOGIN_URL = "/auth"
 
 // ** Icons Imports
-import { Facebook, Twitter, Mail, GitHub } from "react-feather";
+import { Facebook, Twitter, Mail, GitHub } from "react-feather"
 
 // ** Custom Components
-import InputPasswordToggle from "@components/input-password-toggle";
+import InputPasswordToggle from "@components/input-password-toggle"
 
 // ** Reactstrap Imports
 import {
@@ -17,23 +22,85 @@ import {
   Form,
   Label,
   Input,
-  Button,
-} from "reactstrap";
+  Button
+} from "reactstrap"
 
 // ** Illustrations Imports
-import illustrationsLight from "@src/assets/images/pages/login-v2.svg";
-import illustrationsDark from "@src/assets/images/pages/login-v2-dark.svg";
+import illustrationsLight from "@src/assets/images/pages/login-v2.svg"
+import illustrationsDark from "@src/assets/images/pages/login-v2-dark.svg"
 
 // ** Styles
-import "@styles/react/pages/page-authentication.scss";
+import "@styles/react/pages/page-authentication.scss"
 
 const Login = () => {
-  const { skin } = useSkin();
+  const { skin } = useSkin()
 
-  const source = skin === "dark" ? illustrationsDark : illustrationsLight;
+  const source = skin === "dark" ? illustrationsDark : illustrationsLight
+  const { setAuth } = useAuth()
 
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/home"
+
+  const userRef = useRef()
+  const errRef = useRef()
+
+  const [user, setUser] = useState("")
+  const [pwd, setPwd] = useState("")
+  const [errMsg, setErrMsg] = useState("")
+
+  useEffect(() => {
+    userRef.current.focus()
+  }, [])
+
+  useEffect(() => {
+    setErrMsg("")
+  }, [user, pwd])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ user, pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true
+        }
+      )
+      console.log(JSON.stringify(response?.data))
+      //console.log(JSON.stringify(response));
+      const accessToken = response?.data?.accessToken
+      const roles = response?.data?.roles
+      // console.log(accessToken, response)
+      setAuth({ user, pwd, roles, accessToken })
+      setUser("")
+      setPwd("")
+      navigate(from, { replace: true })
+    } catch (err) {
+      console.log(err)
+      if (!err?.response) {
+        setErrMsg("No Server Response")
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Username or Password")
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized")
+      } else {
+        setErrMsg("Login Failed")
+      }
+      errRef.current.focus()
+    }
+  }
   return (
     <div className="auth-wrapper auth-cover">
+      <p
+        ref={errRef}
+        className={errMsg ? "errmsg" : "offscreen"}
+        aria-live="assertive"
+      >
+        {errMsg}
+      </p>
       <Row className="auth-inner m-0">
         <Link className="brand-logo" to="/" onClick={(e) => e.preventDefault()}>
           <svg viewBox="0 0 139 95" version="1.1" height="28">
@@ -121,10 +188,7 @@ const Login = () => {
             <CardText className="mb-2">
               Please sign-in to your account and start the adventure
             </CardText>
-            <Form
-              className="auth-login-form mt-2"
-              onSubmit={(e) => e.preventDefault()}
-            >
+            <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
               <div className="mb-1">
                 <Label className="form-label" for="login-email">
                   Email
@@ -133,6 +197,11 @@ const Login = () => {
                   type="email"
                   id="login-email"
                   placeholder="john@example.com"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={(e) => setUser(e.target.value)}
+                  value={user}
+                  required
                   autoFocus
                 />
               </div>
@@ -148,15 +217,18 @@ const Login = () => {
                 <InputPasswordToggle
                   className="input-group-merge"
                   id="login-password"
+                  onChange={(e) => setPwd(e.target.value)}
+                  value={pwd}
+                  required
                 />
               </div>
-              <div className="form-check mb-1">
+              {/* <div className="form-check mb-1">
                 <Input type="checkbox" id="remember-me" />
                 <Label className="form-check-label" for="remember-me">
                   Remember Me
                 </Label>
-              </div>
-              <Button tag={Link} to="/" color="primary" block>
+              </div> */}
+              <Button color="primary" block>
                 Sign in
               </Button>
             </Form>
@@ -187,7 +259,7 @@ const Login = () => {
         </Col>
       </Row>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
