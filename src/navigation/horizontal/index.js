@@ -1,22 +1,11 @@
-import { Mail, Home } from "react-feather"
+// ** Navigation imports
+import apps from './apps'
+import pages from './pages'
+import others from './others'
+import charts from './charts'
+import dashboards from './dashboards'
+import uiElements from './ui-elements'
+import formsAndTables from './forms-tables'
 
-export default [
-  {
-    id: "home",
-    title: "Home",
-    icon: <Home size={20} />,
-    navLink: "/home"
-  },
-  {
-    id: "adminPage",
-    title: "Admin Page",
-    icon: <Mail size={20} />,
-    navLink: "/admin-page"
-  },
-  {
-    id: "clientPage",
-    title: "Client Page",
-    icon: <Mail size={20} />,
-    navLink: "/client-page"
-  }
-]
+// ** Merge & Export
+export default [...dashboards, ...apps, ...uiElements, ...formsAndTables, ...pages, ...charts, ...others]

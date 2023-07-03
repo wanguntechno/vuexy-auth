@@ -1,18 +1,30 @@
 // ** React Imports
-import { Fragment, lazy } from "react"
-import { Navigate } from "react-router-dom"
+import { Fragment } from 'react'
+
+// ** Routes Imports
+import AppRoutes from './Apps'
+import FormRoutes from './Forms'
+import PagesRoutes from './Pages'
+import TablesRoutes from './Tables'
+import ChartsRoutes from './Charts'
+import DashboardRoutes from './Dashboards'
+import UiElementRoutes from './UiElements'
+import ExtensionsRoutes from './Extensions'
+import PageLayoutsRoutes from './PageLayouts'
+import AuthenticationRoutes from './Authentication'
+
 // ** Layouts
-import BlankLayout from "@layouts/BlankLayout"
-import VerticalLayout from "@src/layouts/VerticalLayout"
-import HorizontalLayout from "@src/layouts/HorizontalLayout"
-import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper"
-import RequireAuth from '@src/components/RequireAuth'
+import BlankLayout from '@layouts/BlankLayout'
+import VerticalLayout from '@src/layouts/VerticalLayout'
+import HorizontalLayout from '@src/layouts/HorizontalLayout'
+import LayoutWrapper from '@src/@core/layouts/components/layout-wrapper'
 
 // ** Route Components
-import PublicRoute from "@components/routes/PublicRoute"
+import PublicRoute from '@components/routes/PublicRoute'
+import PrivateRoute from '@components/routes/PrivateRoute'
 
 // ** Utils
-import { isObjEmpty } from "@utils"
+import { isObjEmpty } from '@utils'
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -21,69 +33,26 @@ const getLayout = {
 }
 
 // ** Document title
-const TemplateTitle = "%s - Vuexy React Admin Template"
+const TemplateTitle = '%s - Vuexy React Admin Template'
 
 // ** Default Route
-const DefaultRoute = "/home"
-
-const Home = lazy(() => import("../../views/Home"))
-const AdminPage = lazy(() => import("../../views/Pages/AdminPage"))
-const ClientPage = lazy(() => import("../../views/Pages/ClientPage"))
-const Login = lazy(() => import("../../views/Login"))
-const Register = lazy(() => import("../../views/Register"))
-const ForgotPassword = lazy(() => import("../../views/ForgotPassword"))
-const Error = lazy(() => import("../../views/Error"))
+const DefaultRoute = '/dashboard/ecommerce'
 
 // ** Merge Routes
 const Routes = [
-  {
-    path: "/",
-    index: true,
-    element: <Navigate replace to={DefaultRoute} />
-  },
-  {
-    path: "/home",
-    element: <Home />
-  },
-  {
-    path: "/admin-page",
-    element: <AdminPage />
-  },
-  {
-    path: "/client-page",
-    element: <ClientPage />
-  },
-  {
-    path: "/login",
-    element: <Login />,
-    meta: {
-      layout: "blank"
-    }
-  },
-  {
-    path: "/register",
-    element: <Register />,
-    meta: {
-      layout: "blank"
-    }
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />,
-    meta: {
-      layout: "blank"
-    }
-  },
-  {
-    path: "/error",
-    element: <Error />,
-    meta: {
-      layout: "blank"
-    }
-  }
+  ...AuthenticationRoutes,
+  ...DashboardRoutes,
+  ...AppRoutes,
+  ...PagesRoutes,
+  ...UiElementRoutes,
+  ...ExtensionsRoutes,
+  ...PageLayoutsRoutes,
+  ...FormRoutes,
+  ...TablesRoutes,
+  ...ChartsRoutes
 ]
 
-const getRouteMeta = (route) => {
+const getRouteMeta = route => {
   if (isObjEmpty(route.element.props)) {
     if (route.meta) {
       return { routeMeta: route.meta }
@@ -98,19 +67,19 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
   const LayoutRoutes = []
 
   if (Routes) {
-    Routes.filter((route) => {
+    Routes.filter(route => {
       let isBlank = false
       // ** Checks if Route layout or Default layout matches current layout
       if (
         (route.meta && route.meta.layout && route.meta.layout === layout) ||
-        ((route.meta === undefined || route.meta.layout === undefined) &&
-          defaultLayout === layout)
+        ((route.meta === undefined || route.meta.layout === undefined) && defaultLayout === layout)
       ) {
-        const RouteTag = PublicRoute
+        let RouteTag = PrivateRoute
 
         // ** Check for public or private route
         if (route.meta) {
-          route.meta.layout === "blank" ? (isBlank = true) : (isBlank = false)
+          route.meta.layout === 'blank' ? (isBlank = true) : (isBlank = false)
+          RouteTag = route.meta.publicRoute ? PublicRoute : PrivateRoute
         }
         if (route.element) {
           const Wrapper =
@@ -136,17 +105,17 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
   return LayoutRoutes
 }
 
-const getRoutes = (layout) => {
-  const defaultLayout = layout || "vertical"
-  const layouts = ["vertical", "horizontal", "blank"]
+const getRoutes = layout => {
+  const defaultLayout = layout || 'vertical'
+  const layouts = ['vertical', 'horizontal', 'blank']
 
   const AllRoutes = []
 
-  layouts.forEach((layoutItem) => {
+  layouts.forEach(layoutItem => {
     const LayoutRoutes = MergeLayoutRoutes(layoutItem, defaultLayout)
 
     AllRoutes.push({
-      path: "/",
+      path: '/',
       element: getLayout[layoutItem] || getLayout[defaultLayout],
       children: LayoutRoutes
     })
