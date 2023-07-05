@@ -20,7 +20,7 @@ const EcommerceWishlist = lazy(() => import('../../views/apps/ecommerce/wishlist
 const EcommerceCheckout = lazy(() => import('../../views/apps/ecommerce/checkout'))
 
 const UserList = lazy(() => import('../../views/apps/user/list'))
-const User = lazy(() => import('../../views/apps/user/list2'))
+const User = lazy(() => import('../../views/users/list'))
 const UserView = lazy(() => import('../../views/apps/user/view'))
 
 const Roles = lazy(() => import('../../views/apps/roles-permissions/roles'))

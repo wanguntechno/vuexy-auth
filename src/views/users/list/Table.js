@@ -1,6 +1,6 @@
 import { Fragment, useEffect } from 'react'
 // ** Store & Actions
-import { getUser } from "../store"
+import { getUser } from "../../apps/user/store"
 import { useDispatch, useSelector } from "react-redux"
 
 
