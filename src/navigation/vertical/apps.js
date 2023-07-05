@@ -129,6 +129,12 @@ export default [
         navLink: '/apps/user/list'
       },
       {
+        id: 'list2',
+        title: 'List 2',
+        icon: <Circle size={12} />,
+        navLink: '/apps/user/list2'
+      },
+      {
         id: 'view',
         title: 'View',
         icon: <Circle size={12} />,

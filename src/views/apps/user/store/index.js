@@ -4,6 +4,16 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // ** Axios Imports
 import axios from 'axios'
 
+export const getUser = createAsyncThunk('appUsers/getUsers', async () => {
+  const response = await fetch('https://api.github.com/users')
+  return response.json()
+})
+
+// export const getUser = createAsyncThunk('appUsers/getUser', async id => {
+//   const response = await axios.get('/api/users/user', { id })
+//   return response.data.user
+// })
+
 export const getAllData = createAsyncThunk('appUsers/getAllData', async () => {
   const response = await axios.get('/api/users/list/all-data')
   return response.data
@@ -16,11 +26,6 @@ export const getData = createAsyncThunk('appUsers/getData', async params => {
     data: response.data.users,
     totalPages: response.data.total
   }
-})
-
-export const getUser = createAsyncThunk('appUsers/getUser', async id => {
-  const response = await axios.get('/api/users/user', { id })
-  return response.data.user
 })
 
 export const addUser = createAsyncThunk('appUsers/addUser', async (user, { dispatch, getState }) => {
@@ -57,8 +62,11 @@ export const appUsersSlice = createSlice({
         state.params = action.payload.params
         state.total = action.payload.totalPages
       })
+      // .addCase(getUser.fulfilled, (state, action) => {
+      //   state.selectedUser = action.payload
+      // })
       .addCase(getUser.fulfilled, (state, action) => {
-        state.selectedUser = action.payload
+        state.data = action.payload
       })
   }
 })
