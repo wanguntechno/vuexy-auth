@@ -1,5 +1,5 @@
 // ** Icons Import
-import { User} from 'react-feather'
+import { User, Shield } from 'react-feather'
 
 export default [
   {

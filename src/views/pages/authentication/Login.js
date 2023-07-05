@@ -65,8 +65,8 @@ const ToastContent = ({ t, name, role }) => {
 }
 
 const defaultValues = {
-  password: 'admin',
-  loginEmail: 'admin@demo.com'
+  password: 'Aa$12345',
+  loginEmail: 'sam1@gmail.com'
 }
 
 const Login = () => {
@@ -87,9 +87,10 @@ const Login = () => {
   const onSubmit = data => {
     if (Object.values(data).every(field => field.length > 0)) {
       useJwt
-        .login({ email: data.loginEmail, password: data.password })
+        .login({ user: data.loginEmail, pwd: data.password })
         .then(res => {
           const data = { ...res.data.userData, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken }
+          console.log(data)
           dispatch(handleLogin(data))
           ability.update(res.data.userData.ability)
           navigate(getHomeRouteForLoggedInUser(data.role))
@@ -182,14 +183,14 @@ const Login = () => {
               <div className='alert-body font-small-2'>
                 <p>
                   <small className='me-50'>
-                    <span className='fw-bold'>Admin:</span> admin@demo.com | admin
+                    <span className='fw-bold'>Admin:</span> sam1@gmail.com | admin
                   </small>
                 </p>
-                <p>
+                {/* <p>
                   <small className='me-50'>
                     <span className='fw-bold'>Client:</span> client@demo.com | client
                   </small>
-                </p>
+                </p> */}
               </div>
               <HelpCircle
                 id='login-tip'

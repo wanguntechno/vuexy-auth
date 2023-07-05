@@ -1,6 +1,6 @@
 // ** Navigation imports
 import masters from './masters'
-import dashboards from './dashboards'
+// import dashboards from './dashboards'
 
 // ** Merge & Export
-export default [...dashboards, ...masters]
+export default [...masters]

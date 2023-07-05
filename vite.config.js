@@ -45,6 +45,7 @@ export default () => {
         { find: '@configs', replacement: path.resolve(__dirname, 'src/configs') },
         { find: 'url', replacement: 'rollup-plugin-node-polyfills/polyfills/url' },
         { find: '@styles', replacement: path.resolve(__dirname, 'src/@core/scss') },
+        { find: '@axios', replacement: path.resolve(__dirname, 'src/@core/api') },
         { find: 'util', replacement: 'rollup-plugin-node-polyfills/polyfills/util' },
         { find: 'zlib', replacement: 'rollup-plugin-node-polyfills/polyfills/zlib' },
         { find: '@utils', replacement: path.resolve(__dirname, 'src/utility/Utils') },
