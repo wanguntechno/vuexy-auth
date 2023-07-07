@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 export const getUser = createAsyncThunk('appUsers/getUsers', async () => {
-  const response = await fetch('https://api.github.com/users')
+  const response = await fetch('http://localhost:8000/api/user')
   return response.json()
 })
 
