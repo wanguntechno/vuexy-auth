@@ -65,8 +65,8 @@ const ToastContent = ({ t, name, role }) => {
 }
 
 const defaultValues = {
-  password: '123456',
-  loginEmail: 'iqballzuardi@gmail.com'
+  password: 'Aa$12345',
+  loginEmail: 'sam1@gmail.com'
 }
 
 const Login = () => {
@@ -87,15 +87,15 @@ const Login = () => {
   const onSubmit = data => {
     if (Object.values(data).every(field => field.length > 0)) {
       useJwt
-        .login({ username: data.loginEmail, password: data.password })
+        .login({ user: data.loginEmail, pwd: data.password })
         .then(res => {
-          const data = { ...res.data.user, accessToken: res.data.data.accessToken, refreshToken: res.data.data.refreshToken }
+          const data = { ...res.data.userData, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken }
           console.log(data)
           dispatch(handleLogin(data))
-          ability.update(res.data.data.user.ability)
-          navigate(getHomeRouteForLoggedInUser(data.data.user.role))
+          ability.update(res.data.userData.ability)
+          navigate(getHomeRouteForLoggedInUser(data.role))
           toast(t => (
-            <ToastContent t={t} role={data.data.user.role || 'admin'} name={data.data.user.fullName || data.data.user.username || 'John Doe'} />
+            <ToastContent t={t} role={data.role || 'admin'} name={data.fullName || data.username || 'John Doe'} />
           ))
         })
         .catch(err => setError('loginEmail', {

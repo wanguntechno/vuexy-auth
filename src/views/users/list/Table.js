@@ -1,57 +1,52 @@
-import { useState, useEffect, Fragment } from 'react';
+import { Fragment, useEffect } from 'react'
+// ** Store & Actions
+import { getUser } from "../store"
+import { useDispatch, useSelector } from "react-redux"
 
-const PostList = () => {
-// function PostList() {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('http://localhost:8000/api/user');
-        const data = await response.json();
-        console.log(data)
-        setPosts(data);
-        setIsLoading(false);
-    } catch (error) {
-        setError(error);
-        setIsLoading(false);
-    }
-}
-fetchData();
-}, []);
+// ** Reactstrap Imports
+import { Card, CardHeader, CardTitle, CardBody, Table } from 'reactstrap'
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+const TableNya = () => {
+    // ** Store Vars
+    const dispatch = useDispatch()
+    const store = useSelector((state) => state.users)
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+    useEffect(() => {
+      dispatch(getUser())
+    }, [dispatch])
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nano ID</th>
-          <th>Username</th>
-          <th>Body</th>
-        </tr>
-      </thead>
-      <tbody>
-        {posts.data.map((post, index) => (
-          <tr key={post.nanoid}>
-            <td>{index + 1}</td>
-            <td>{post.nanoid}</td>
-            <td>{post.username}</td>
-            <td>{post.body}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Fragment>
+      <Card>
+        <CardHeader>
+          <CardTitle tag="h4">Filters</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <Table className="text-center text-nowrap" responsive bordered>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User Login</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>              {
+              store.data.map((item, index) => {
+                return (
+                  <tr key={item.id}>
+                    <th>{index + 1}</th>
+                    <th className='text-start'>{item.login}</th>
+                    <td>{item.type}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </CardBody>
+      </Card>
+    </Fragment>
   )
 }
 
-export default PostList
+export default TableNya
